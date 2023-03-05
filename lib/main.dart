@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'transaction.dart';
-import 'package:intl/intl.dart';
+import 'transaction_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,10 +30,16 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 't1', title: 'Sepatu Baru', amount: 350000, date: DateTime.now()),
-    Transaction(
-        id: 't2', title: 'Makan Siang', amount: 38000, date: DateTime.now()),
+    // Transaction(
+    //     id: 't1', title: 'Sepatu Baru', amount: 350000, date: DateTime.now()),
+    // Transaction(
+    //     id: 't2', title: 'Makan Siang', amount: 38000, date: DateTime.now()),
+    // Transaction(
+    //     id: 't3', title: 'Makan Malam', amount: 40000, date: DateTime.now()),
+    // Transaction(
+    //     id: 't4', title: 'Jajan Sore', amount: 10000, date: DateTime.now()),
+    // Transaction(id: 't5', title: 'Buah', amount: 8000, date: DateTime.now()),
+    // Transaction(id: 't6', title: 'Snack', amount: 5000, date: DateTime.now()),
   ];
 
   void _showInputSheet(BuildContext ctx) {
@@ -56,17 +62,8 @@ class MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Center(child: Text('Expense App'))),
-      body: ListView.builder(
-          itemCount: _userTransactions.length,
-          itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Text(_userTransactions[index].title),
-              subtitle: Text(DateFormat('dd MMM y, hh:mm:ss')
-                  .format(_userTransactions[index].date)),
-              trailing: Text(NumberFormat('Rp #000', 'id-ID')
-                  .format(_userTransactions[index].amount)),
-            );
-          }),
+      body: TransactionList(_userTransactions),
+      // body: SingleChildScrollView(child: TransactionList(_userTransactions)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showInputSheet(context),
