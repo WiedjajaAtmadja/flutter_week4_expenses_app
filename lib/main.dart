@@ -42,17 +42,42 @@ class MyHomePageState extends State<MyHomePage> {
     // Transaction(id: 't6', title: 'Snack', amount: 5000, date: DateTime.now()),
   ];
 
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+
+  void _addNewTransaction(String txTitle, double txAmount) {
+    final newTx = Transaction(
+        id: DateTime.now().toString(),
+        title: txTitle,
+        amount: txAmount,
+        date: DateTime.now());
+
+    setState(() {
+      _userTransactions.add(newTx);
+    });
+  }
+
   void _showInputSheet(BuildContext ctx) {
     showModalBottomSheet(
         context: ctx,
         builder: (_) {
           return Column(
             children: [
-              const TextField(decoration: InputDecoration(labelText: 'Title')),
-              const TextField(decoration: InputDecoration(labelText: 'Amount')),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Title'),
+                controller: _titleController,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Amount'),
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+              ),
               TextButton(onPressed: () {}, child: const Text('Choose Date')),
               ElevatedButton(
-                  onPressed: () {}, child: const Text('Add Transaction'))
+                onPressed: () => _addNewTransaction(_titleController.text,
+                    double.parse(_amountController.text)),
+                child: const Text('Add Transaction'),
+              )
             ],
           );
         });
