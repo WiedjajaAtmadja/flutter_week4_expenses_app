@@ -4,21 +4,42 @@ import 'package:intl/intl.dart';
 class NewTransaction extends StatefulWidget {
   final Function addTx;
 
-  NewTransaction(this.addTx);
+  const NewTransaction(this.addTx, {super.key});
 
   @override
-  _NewTransactionState createState() => _NewTransactionState();
+  State<NewTransaction> createState() => _NewTransactionState();
 }
 
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
 
   void _submitData() {
     final enteredTitle = _titleController.text;
-    final enteredAmount = double.parse(_amountController.text);
-    widget.addTx(enteredTitle, enteredAmount);
-    Navigator.of(context).pop();
+    final enteredAmount = _amountController.text.isNotEmpty
+        ? double.parse(_amountController.text)
+        : 0;
+    if (enteredTitle.isNotEmpty && enteredAmount > 0) {
+      widget.addTx(enteredTitle, enteredAmount, _selectedDate);
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2023),
+            lastDate: DateTime.now())
+        .then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -33,11 +54,15 @@ class _NewTransactionState extends State<NewTransaction> {
           decoration: const InputDecoration(labelText: 'Amount'),
           controller: _amountController,
           keyboardType: TextInputType.number,
-          // onSubmitted: (_) => _submitData(),
         ),
-        TextButton(
-          onPressed: () {},
-          child: const Text('Choose date'),
+        Row(
+          children: [
+            Expanded(
+                child: Text(
+                    'Picked Date: ${DateFormat.yMMMEd().format(_selectedDate)}')),
+            TextButton(
+                onPressed: _presentDatePicker, child: const Text('Choose Date'))
+          ],
         ),
         ElevatedButton(
             onPressed: () => _submitData(),
