@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'transaction.dart';
 import 'transaction_list.dart';
+import 'new_transaction.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,9 +43,6 @@ class MyHomePageState extends State<MyHomePage> {
     // Transaction(id: 't6', title: 'Snack', amount: 5000, date: DateTime.now()),
   ];
 
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
-
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
@@ -61,25 +59,7 @@ class MyHomePageState extends State<MyHomePage> {
     showModalBottomSheet(
         context: ctx,
         builder: (_) {
-          return Column(
-            children: [
-              TextField(
-                decoration: const InputDecoration(labelText: 'Title'),
-                controller: _titleController,
-              ),
-              TextField(
-                decoration: const InputDecoration(labelText: 'Amount'),
-                controller: _amountController,
-                keyboardType: TextInputType.number,
-              ),
-              TextButton(onPressed: () {}, child: const Text('Choose Date')),
-              ElevatedButton(
-                onPressed: () => _addNewTransaction(_titleController.text,
-                    double.parse(_amountController.text)),
-                child: const Text('Add Transaction'),
-              )
-            ],
-          );
+          return NewTransaction(_addNewTransaction);
         });
   }
 
